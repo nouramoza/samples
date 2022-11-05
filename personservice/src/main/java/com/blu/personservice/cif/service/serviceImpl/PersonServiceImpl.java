@@ -10,9 +10,12 @@ import com.blu.personservice.infrastructure.web.dto.response.GenericRestResponse
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +31,13 @@ public class PersonServiceImpl implements PersonService {
 
     private final Logger logger = LoggerFactory.getLogger(PersonServiceImpl.class);
 
+    private final static String PERSON_CACHE = "personCache";
+
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    @Autowired
+    private CacheManager cacheManager;
     private static final ModelMapper modelMapper = new ModelMapper();
 
     private final PersonRepository personRepository;
@@ -43,31 +53,38 @@ public class PersonServiceImpl implements PersonService {
      * @return GenericRestResponse adding card response
      */
     @Override
-//    @CachePut(value = "personCache", key = "#id")
     public GenericRestResponse addPerson(PersonDto personDto) {
+        GenericRestResponse genericRestResponse;
+        try {
+            PersonEntity personEntity = modelMapper.map(personDto, PersonEntity.class);
+            personRepository.saveAndFlush(personEntity);
 
-        PersonEntity personEntity = modelMapper.map(personDto, PersonEntity.class);
+//            redisTemplate.opsForHash().put("personCache",personEntity.getId(),personEntity);
+//            redisTemplate.opsForValue().set(cacheKey , cacheValue , Duration.ofSeconds(10s)).subscribe()
+//            redisTemplate.opsForValue().set("personCache::"+personEntity.getId() , genericRestResponse);
+//            redisTemplate.opsForHash().get("personCache",personEntity.getId());
 
-        personRepository.saveAndFlush(personEntity);
+            genericRestResponse = new GenericRestResponse(GenericRestResponse.STATUS.SUCCESS,
+                    ConstantsUtil.ResponseMessage.PERSON_ADDED_SUCCESSFULLY,
+                    personEntity.toString());
 
-        GenericRestResponse genericRestResponse = new GenericRestResponse(GenericRestResponse.STATUS.SUCCESS,
-                ConstantsUtil.ResponseMessage.PERSON_ADDED_SUCCESSFULLY,
-                personEntity.toString());
+            cacheManager.getCache(PERSON_CACHE).clear();
+
+        } catch (Exception e) {
+            logger.error(ErrorConstants.PersonMessage.INCORRECT_INPUT_MSG);
+            genericRestResponse = new GenericRestResponse(GenericRestResponse.STATUS.FAILURE,
+                    e.getMessage());
+        }
         return genericRestResponse;
     }
 
     @Override
-    @Cacheable(value = "personCache", key = "#id")
+    @Cacheable(value = PERSON_CACHE, key = "#id")
     public GenericRestResponse getPerson(Long id) {
         GenericRestResponse genericRestResponse;
         try {
             PersonEntity personEntity = loadPersonById(id);
 
-            PersonDto personDto = new PersonDto(
-                    personEntity.getId(),
-                    personEntity.getFirstName(),
-                    personEntity.getLastName(), personEntity.getNationalCode(),
-                    personEntity.getHomeAddress(), personEntity.getPhoneNumber());
             genericRestResponse = new GenericRestResponse(GenericRestResponse.STATUS.SUCCESS,
                     ConstantsUtil.ResponseMessage.PERSON_FOUNDED, personEntity.toString());
         } catch (Exception e) {
@@ -80,7 +97,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    @CachePut(value = "personCache", key = "#id")
+    @CachePut(value = PERSON_CACHE, key = "#id")
     public GenericRestResponse updatePerson(Long id, PersonDto personDto) {
         GenericRestResponse genericRestResponse;
 
@@ -118,7 +135,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    @CacheEvict(value = "personCache", key = "#id")
+    @CacheEvict(value = PERSON_CACHE, key = "#id")
     public GenericRestResponse deletePerson(Long id) {
         GenericRestResponse genericRestResponse;
 
