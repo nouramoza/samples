@@ -1,20 +1,8 @@
-package com.blu.personservice.integrationtest.person;//package com.blu.personservice.integrationtest.person;
+//package com.blu.personservice.integrationtest.person;//package com.blu.personservice.integrationtest.person;
 //
-//import com.blu.personservice.cif.entity.PersonEntity;
 //import com.blu.personservice.cif.web.dto.PersonDto;
-//import com.blu.personservice.infrastructure.api.web.dto.response.GenericRestResponse;
-//import com.blu.personservice.integrationtest.common.Utils;
 //import com.fasterxml.jackson.core.JsonProcessingException;
-//import com.fasterxml.jackson.core.type.TypeReference;
 //import com.fasterxml.jackson.databind.ObjectMapper;
-//import io.restassured.builder.RequestSpecBuilder;
-//import io.restassured.builder.ResponseSpecBuilder;
-//import io.restassured.http.ContentType;
-//import io.restassured.response.Response;
-//import io.restassured.specification.RequestSpecification;
-//import io.restassured.specification.ResponseSpecification;
-//import org.junit.Assert;
-//import org.junit.Before;
 //import org.junit.jupiter.api.Assertions;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
@@ -28,12 +16,8 @@ package com.blu.personservice.integrationtest.person;//package com.blu.personser
 //import org.springframework.test.web.servlet.MvcResult;
 //import org.springframework.test.web.servlet.RequestBuilder;
 //
-//import static org.hamcrest.Matchers.containsString;
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.junit.jupiter.api.Assertions.assertNotNull;
 //import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 //import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 //import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 //
 //@SpringBootTest
@@ -92,12 +76,13 @@ package com.blu.personservice.integrationtest.person;//package com.blu.personser
 ////        Utils.initializeRESTAssured();
 ////        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
 ////        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
-//        PersonDto personDto = new PersonDto();
-//        personDto.setFirstName("ddd");
-//        personDto.setLastName("ddd");
-//        personDto.setPhoneNumber("ddd");
-//        personDto.setHomeAddress("ddd");
-//        personDto.setNationalCode("ddd");
+//        PersonDto personDto = PersonDto.builder()
+//        .firstName("firstName")
+//                .lastName("lastName")
+//                .phoneNumber("phoneNumber")
+//                .homeAddress("homeAddress")
+//                .nationalCode("123135214354")
+//                .build();
 //
 //
 //        RequestBuilder req = post(ADD_PERSON_URI)
