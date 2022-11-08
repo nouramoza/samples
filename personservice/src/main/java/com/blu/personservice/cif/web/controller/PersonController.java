@@ -5,8 +5,11 @@ import com.blu.personservice.cif.web.dto.PersonDto;
 import com.blu.personservice.infrastructure.web.dto.response.GenericRestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/person")
@@ -20,6 +23,7 @@ public class PersonController {
     }
 
     @PostMapping(value = "/addPerson")
+    @ResponseStatus(HttpStatus.CREATED)
     public GenericRestResponse addPerson(
             @RequestBody PersonDto personDto) {
         logger.debug("REST request to save Person : {}", personDto);
@@ -31,6 +35,12 @@ public class PersonController {
             @PathVariable("id") final Long id) {
         logger.debug("REST request to get Person : {}", id);
         return personService.getPerson(id);
+    }
+
+    @GetMapping(value = "/getAllPerson")
+    public List<PersonDto> getAllPerson() {
+        logger.debug("REST request to get All Person");
+        return personService.getAllPerson();
     }
 
     @PutMapping(value = "/updatePerson")

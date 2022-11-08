@@ -6,6 +6,7 @@ import com.blu.personservice.cif.service.PersonService;
 import com.blu.personservice.cif.web.dto.PersonDto;
 import com.blu.personservice.cif.web.error.ErrorConstants;
 import com.blu.personservice.infrastructure.util.ConstantsUtil;
+import com.blu.personservice.infrastructure.util.ObjectMapperUtils;
 import com.blu.personservice.infrastructure.web.dto.response.GenericRestResponse;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -94,6 +96,12 @@ public class PersonServiceImpl implements PersonService {
         }
 
         return genericRestResponse;
+    }
+
+    @Override
+    public List<PersonDto> getAllPerson() {
+        List<PersonEntity> list = personRepository.findAll();
+        return ObjectMapperUtils.mapAll(list, PersonDto.class);
     }
 
     @Override
