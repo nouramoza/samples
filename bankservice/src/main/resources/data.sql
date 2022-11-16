@@ -1,7 +1,7 @@
 create table account
 (
     id             bigint not null,
-    account_number VARCHAR2(20 char)
+    account_number VARCHAR2(20)
         constraint ACCOUNT_NUMBER_UK
         unique,
     person_id      NUMBER(38),
@@ -28,7 +28,7 @@ VALUES (4, 3473265, 220, true, 4);
 create table card
 (
     id                  bigint not null,
-    card_number         VARCHAR2(20 char)
+    card_number         VARCHAR2(20)
         constraint CARD_NUMBER_UK
         unique,
     cvv2                NUMBER(6),
@@ -41,14 +41,14 @@ create table card
 );
 
 -- CARD DATA INSERTION
-INSERT INTO public.card(id, card_number, cvv2, expire_date, is_active, pin, account_id, incorrect_pin_count)
-VALUES (1, 6280231451904303, 199, TO_DATE('11/11/2022', 'DD/MM/YYYY'), true, 1233, 1, 0);
+INSERT INTO public.card(id, card_number, cvv2, is_active, pin, account_id, incorrect_pin_count)
+VALUES (1, 6280231451904303, 199, true, 1233, 1, 0);
 
-INSERT INTO public.card(id, card_number, cvv2, expire_date, is_active, pin, account_id, incorrect_pin_count)
-VALUES (2, 628023145234765, 342, TO_DATE('11/11/2022', 'DD/MM/YYYY'), false, 1111, 2, 0);
-
-INSERT INTO public.card(id, card_number, cvv2, expire_date, is_active, pin, account_id, incorrect_pin_count)
-VALUES (3, 628023145412347, 202, TO_DATE('11/11/2020', 'DD/MM/YYYY'), true, 7654, 1, 0);
-
-INSERT INTO public.card(id, card_number, cvv2, expire_date, is_active, pin, account_id, incorrect_pin_count)
-VALUES (4, 6280231476123412, 239, TO_DATE('11/11/2022', 'DD/MM/YYYY'), true, 1233, 1, 0);
+-- INSERT INTO public.card(id, card_number, cvv2, expire_date, is_active, pin, account_id, incorrect_pin_count)
+-- VALUES (2, 628023145234765, 342, TO_DATE('11/11/2022', 'DD/MM/YYYY'), false, 1111, 2, 0);
+--
+-- INSERT INTO public.card(id, card_number, cvv2, expire_date, is_active, pin, account_id, incorrect_pin_count)
+-- VALUES (3, 628023145412347, 202, TO_DATE('11/11/2020', 'DD/MM/YYYY'), true, 7654, 1, 0);
+--
+-- INSERT INTO public.card(id, card_number, cvv2, expire_date, is_active, pin, account_id, incorrect_pin_count)
+-- VALUES (4, 6280231476123412, 239, TO_DATE('11/11/2022', 'DD/MM/YYYY'), true, 1233, 1, 0);
